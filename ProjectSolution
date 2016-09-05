@@ -6,6 +6,7 @@ C = group B by Pclass;
 D = foreach C generate group,AVG(B.fare);
 Dump D;
 
+
 2. FInd the number of people are alive in each class and are embarked in Southampton?
 
 A = load'/FlumeData.1473037122210.tmp' using PigStorage(',') as (id:chararray,survived:chararray,Pclass:chararray,name:chararray,sex:chararray,age:int,sibsp:chararray,parch:chararray,ticket:chararray,fare:float,cabin:chararray,embarked:chararray);
@@ -15,6 +16,7 @@ D = foreach C generate Pclass,survived;
 E = group D by Pclass;
 F = foreach E generate group,COUNT(D.survived)as alive;
 Dump F;
+
 
 3. Find out number of male and female died in each class?
 
