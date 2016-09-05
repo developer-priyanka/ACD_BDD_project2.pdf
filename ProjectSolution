@@ -1,0 +1,35 @@
+1. Find the average fare of each class?
+
+A = load'/FlumeData.1473037122210.tmp' using PigStorage(',') as (id:chararray,survived:chararray,Pclass:chararray,name:chararray,sex:chararray,age:int,sibsp:chararray,parch:chararray,ticket:chararray,fare:float,cabin:chararray,embarked:chararray);
+B = foreach A generate Pclass,fare;
+C = group B by Pclass;
+D = foreach C generate group,AVG(B.fare);
+Dump D;
+
+2. FInd the number of people are alive in each class and are embarked in Southampton?
+
+A = load'/FlumeData.1473037122210.tmp' using PigStorage(',') as (id:chararray,survived:chararray,Pclass:chararray,name:chararray,sex:chararray,age:int,sibsp:chararray,parch:chararray,ticket:chararray,fare:float,cabin:chararray,embarked:chararray);
+B = foreach A generate Pclass,embarked,survived;
+C = filter B by embarked=='S' and survived=='0';
+D = foreach C generate Pclass,survived;
+E = group D by Pclass;
+F = foreach E generate group,COUNT(D.survived)as alive;
+Dump F;
+
+3. Find out number of male and female died in each class?
+
+A = load'/FlumeData.1473037122210.tmp' using PigStorage(',') as (id:chararray,survived:chararray,Pclass:chararray,name:chararray,sex:chararray,age:int,sibsp:chararray,parch:chararray,ticket:chararray,fare:float,cabin:chararray,embarked:chararray);
+
+B = foreach A generate Pclass,sex,survived;
+C = filter B by survived=='1';
+D = foreach C generate Pclass,sex;
+E = filter D by sex =='male';
+M = foreach E generate Pclass,sex;
+G = group M by Pclass;
+I  = foreach G generate group,COUNT(M.sex) as male;
+F = filter D by sex =='female';
+N = foreach F generate Pclass,sex;
+H = group N by Pclass;
+J = foreach H generate group,COUNT(N.sex) as female;
+K = join I by group,J by group;
+Dump K;
